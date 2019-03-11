@@ -1,15 +1,25 @@
 import {Monad} from "./Monad";
 
-export class Identity<T> implements Monad<T> {
+export class Maybe<T> implements Monad<T> {
 
-    constructor(private wrappedValue: T){}
-
-    bind<U, V>(bindFunction: (rawValue: T) => Monad<U> | V): Monad<U> | V {
-        return bindFunction(this.wrappedValue);
+    public static just<T>(value: T) {
+        if (value === null || value === undefined) {
+            throw new Error("Invalid Maybe.some()! Value is non-existent.")
+        }
+        return new Maybe(value);
     }
 
-    unit(wrappedValue: T): Monad<T> {
-        return new Identity(wrappedValue);
+    public static nothing<T>() {
+        return new Maybe<T>(null);
+    }
+
+    constructor(private wrappedValue: T | null) {}
+
+    public bind<U>(bindFunction: (rawValue: T) => Monad<U>): Monad<U> {
+        if (this.wrappedValue == null) {
+            return Maybe.nothing();
+        }
+        return bindFunction(this.wrappedValue);
     }
 
 }
