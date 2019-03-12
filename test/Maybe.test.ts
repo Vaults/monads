@@ -1,7 +1,6 @@
-import {Identity} from "../src/Identity";
 import {Maybe} from "../src/Maybe";
 import {Monad} from "../src/Monad";
-import {assertEquals} from "./EqualMonad";
+import {assertEquals} from "./AssertionHelpers";
 
 describe("Monad - Maybe", () => {
 
