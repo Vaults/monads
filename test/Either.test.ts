@@ -3,8 +3,9 @@ import {Identity} from "../src/Identity";
 import {assertEquals} from "./AssertionHelpers";
 import {getDescriptionString, getLawString} from "./DescriptionHelpers";
 
-
+const pickLeft = (x: any) => Identity.of(false);
 const pickRight = (x: any) => Identity.of(true);
+
 describe(getDescriptionString(Either), () => {
 
     it(getLawString(1), (done) => {
@@ -32,6 +33,22 @@ describe(getDescriptionString(Either), () => {
         const expected = either.bind(pickRight).bind(square).bind(add);
         const actual = either.bind(pickRight).bind((x: number) => square(x).bind(add));
         assertEquals(expected, actual, done);
+    });
+
+    it("right", (done) => {
+        const either = Either.of(3,
+            (x) => Identity.of(x + 1),
+            (x) => Identity.of(x - 1));
+
+        assertEquals(either.bind(pickRight), Identity.of(4), done);
+    });
+
+    it("left", (done) => {
+        const either = Either.of(3,
+            (x) => Identity.of(x + 1),
+            (x) => Identity.of(x - 1));
+
+        assertEquals(either.bind(pickLeft), Identity.of(2), done);
     });
 
 });

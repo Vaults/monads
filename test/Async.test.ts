@@ -31,7 +31,7 @@ describe(getDescriptionString(Async), () => {
             async.resolve(3);
         }, delay);
 
-        assertEquals(async, async, done);
+        assertEquals(async, resync, done);
 
     });
 
