@@ -1,4 +1,4 @@
-import {Monad} from "./Monad";
+import {BindFunction, Monad} from "./Monad";
 
 export class Identity<T> implements Monad<T> {
 
@@ -8,7 +8,7 @@ export class Identity<T> implements Monad<T> {
 
     constructor(private value: T) {}
 
-    public bind<U>(bindFunction: (rawValue: T) => Monad<U>): Monad<U> {
+    public bind<U>(bindFunction: BindFunction<T, U>): Monad<U> {
         return bindFunction(this.value);
     }
 

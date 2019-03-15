@@ -1,5 +1,5 @@
 import {Identity} from "./Identity";
-import {Monad} from "./Monad";
+import {BindFunction, Monad} from "./Monad";
 
 export class List<T> implements Monad<T> {
 
@@ -9,7 +9,7 @@ export class List<T> implements Monad<T> {
 
     constructor(private wrappedValue: Array<Monad<T>>) { }
 
-    public bind<U>(bindFunction: (rawValue: T) => Monad<U>): Monad<U> {
+    public bind<U>(bindFunction: BindFunction<T, U>): Monad<U> {
         return new List(this.wrappedValue.map(o => o.bind(bindFunction)));
     }
 

@@ -3,21 +3,21 @@ import {List} from "../src/List";
 import {Maybe} from "../src/Maybe";
 import {Monad} from "../src/Monad";
 import {assertEquals} from "./AssertionHelpers";
+import {getDescriptionString, getLawString} from "./DescriptionHelpers";
 
-describe("Monad - List", () => {
+describe(getDescriptionString(List), () => {
 
-    it("Law 1 - left identity", (done) => {
+    it(getLawString(1), (done) => {
         const square = (x: number) => Identity.of(x * x);
         assertEquals(List.of([9]), List.of([3]).bind(square), done);
     });
 
-    it("Law 2 - right identity", (done) => {
-        const square = (x: number) => Identity.of(x * x);
-        const list: Monad<number> = List.of([3]);
-        assertEquals(square(3), list.bind(square), done);
+    it(getLawString(2), (done) => {
+        const list = List.of([3]);
+        assertEquals(list, list.bind(x => List.of([x])), done);
     });
 
-    it("Law 3 - associativity", (done) => {
+    it(getLawString(3), (done) => {
         const square = (x: number) => Identity.of(x * x);
         const add = (x: number) => Identity.of(x + x);
         const seed = List.of([2]);

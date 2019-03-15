@@ -1,21 +1,20 @@
 import {Identity} from "../src/Identity";
-import {Monad} from "../src/Monad";
 import {assertEquals} from "./AssertionHelpers";
+import {getDescriptionString, getLawString} from "./DescriptionHelpers";
 
-describe("Monad - Identity", () => {
+describe(getDescriptionString(Identity), () => {
 
-    it("Law 1 - left identity", (done) => {
+    it(getLawString(1), (done) => {
         const square = (x: number) => Identity.of(x * x);
         assertEquals(square(3), Identity.of(3).bind(square), done);
     });
 
-    it("Law 2 - right identity", (done) => {
-        const square = (x: number) => Identity.of(x * x);
-        const identity: Monad<number> = Identity.of(3);
-        assertEquals(square(3), identity.bind(square), done);
+    it(getLawString(2), (done) => {
+        const m = Identity.of(3);
+        assertEquals(m, m.bind(Identity.of), done);
     });
 
-    it("Law 3 - associativity", (done) => {
+    it(getLawString(3), (done) => {
         const square = (x: number) => Identity.of(x * x);
         const add = (x: number) => Identity.of(x + x);
         const expected = Identity.of(3).bind(square).bind(add);

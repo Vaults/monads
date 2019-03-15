@@ -2,36 +2,40 @@ import {Async} from "../src/Async";
 import {Identity} from "../src/Identity";
 import {Monad} from "../src/Monad";
 import {assertEquals} from "./AssertionHelpers";
+import {getDescriptionString, getLawString} from "./DescriptionHelpers";
 
-describe("Monad - Async", () => {
+const delay = 10;
+describe(getDescriptionString(Async), () => {
 
-    it("Law 1 - left identity", (done) => {
+    it(getLawString(1), (done) => {
         const square = (x: number) => Identity.of(x * x);
         const expected = Async.of([square]);
         const actualAsync = Async.just<number>();
         const actual = actualAsync.bind(square);
 
+
         setTimeout(() => {
             expected.resolve(3);
             actualAsync.resolve(3);
-        }, 100);
+        }, delay);
 
         assertEquals(expected, actual, done);
 
     });
 
-    it("Law 2 - right identity", (done) => {
-        const square = (x: number) => Identity.of(x * x);
-        const simple = Async.just<number>();
+    it(getLawString(2), (done) => {
+        const async = Async.just();
+        const resync = async.bind(x => Async.wait(delay / 1000, x));
 
         setTimeout(() => {
-            simple.resolve(3);
-        }, 100);
+            async.resolve(3);
+        }, delay);
 
-        assertEquals(square(3), simple.bind(square), done);
+        assertEquals(async, async, done);
+
     });
 
-    it("Law 3 - associativity", (done) => {
+    it(getLawString(3), (done) => {
         const square = (x: number) => Identity.of(x * x);
         const add = (x: number) => Identity.of(x + x);
         const expectedAsync = Async.just<number>();
@@ -42,7 +46,7 @@ describe("Monad - Async", () => {
         setTimeout(() => {
             expectedAsync.resolve(3);
             actualAsync.resolve(3);
-        }, 100);
+        }, delay);
 
         assertEquals(expected, actual, done);
 
@@ -58,17 +62,17 @@ describe("Monad - Async", () => {
 
         setTimeout(() => {
             async.resolve(8);
-        }, 100);
+        }, delay);
 
     });
 
     it("wait", (done) => {
-        const wait = Async.wait(2, 2)
+        const wait = Async.wait(delay / 1000, delay / 1000)
             .bind(x => Async.wait(x, "Yes!"))
-            .bind(x => Identity.of(x));
+            .bind(Identity.of);
 
         assertEquals(wait, Identity.of("Yes!"), done);
 
-    }).timeout(5000);
+    });
 
 });

@@ -1,21 +1,20 @@
 import {Maybe} from "../src/Maybe";
-import {Monad} from "../src/Monad";
 import {assertEquals, assertNothing} from "./AssertionHelpers";
+import {getDescriptionString, getLawString} from "./DescriptionHelpers";
 
-describe("Monad - Maybe", () => {
+describe(getDescriptionString(Maybe), () => {
 
-    it("Law 1 - left identity", (done) => {
+    it(getLawString(1), (done) => {
         const square = (x: number) => Maybe.just(x * x);
         assertEquals(square(3), Maybe.just(3).bind(square), done);
     });
 
-    it("Law 2 - right identity", (done) => {
-        const square = (x: number) => Maybe.just(x * x);
-        const identity: Monad<number> = Maybe.just(3);
-        assertEquals(square(3), identity.bind(square), done);
+    it(getLawString(2), (done) => {
+        const maybe = Maybe.just(3);
+        assertEquals(maybe, maybe.bind(Maybe.just), done);
     });
 
-    it("Law 3 - associativity", (done) => {
+    it(getLawString(3), (done) => {
         const square = (x: number) => Maybe.just(x * x);
         const add = (x: number) => Maybe.just(x + x);
         const expected = Maybe.just(3).bind(square).bind(add);

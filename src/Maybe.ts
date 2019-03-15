@@ -1,4 +1,4 @@
-import {Monad} from "./Monad";
+import {BindFunction, Monad} from "./Monad";
 
 export class Maybe<T> implements Monad<T> {
 
@@ -15,7 +15,7 @@ export class Maybe<T> implements Monad<T> {
 
     constructor(private wrappedValue: T | null) {}
 
-    public bind<U>(bindFunction: (rawValue: T) => Monad<U>): Monad<U> {
+    public bind<U>(bindFunction: BindFunction<T, U>): Monad<U> {
         if (this.wrappedValue == null) {
             return Maybe.nothing();
         }

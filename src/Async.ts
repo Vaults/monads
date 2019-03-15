@@ -22,9 +22,10 @@ export class Async<T> implements Monad<T> {
     constructor(public thenFunctions: ThenFunction[]) {}
 
     public resolve(value: T): void {
-        this.thenFunctions.reduce((acc: Monad<any>, next) => {
-           return acc.bind(next);
-        }, Identity.of(value));
+        let valueMonad: Monad<any> = Identity.of(value);
+        this.thenFunctions.forEach(func => {
+            valueMonad = valueMonad.bind(func);
+        });
     }
 
     public bind<U>(bindFunction: (rawValue: T) => Monad<U>): Monad<U> {
