@@ -1,3 +1,4 @@
+/* tslint:disable:no-console */
 import {assert} from "chai";
 import {Maybe} from "../src/Maybe";
 import {Monad} from "../src/Monad";
@@ -13,17 +14,16 @@ const doAssert = <T>(expected: Monad<T>, actual: Monad<T>, assertFunction: (expe
     });
 };
 
-export const assertEquals = <T>(expected: Monad<T>, actual: Monad<T>, done?: Done) => {
+export const assertEquals = <T>(expected: Monad<T>, actual: Monad<T>, done: Done) => {
     doAssert(expected, actual, (x: T, y: T) => {
         assert.equal(x, y);
-        if (done) {
-            done();
-        }
+        done();
     });
 };
 
-export const assertNotEquals = <T>(expected: Monad<T>, actual: Monad<T>) => {
-    doAssert(expected, actual, (x: T, y: T) => {
-        assert.notEqual(x, y);
+export const assertNothing = <T>(expected: Monad<T>) => {
+    expected.bind(value => {
+       assert.fail("Asserted nothing, but method not short circuited!");
+       return Maybe.nothing();
     });
 };
